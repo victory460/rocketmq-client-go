@@ -247,7 +247,6 @@ func TestInvokeAsync(t *testing.T) {
 		if err != nil {
 			t.Fatalf("failed to create connection. %s", err)
 		}
-		defer conn.Close()
 		scanner := client.createScanner(conn)
 		for scanner.Scan() {
 			t.Log("receive request")
@@ -258,6 +257,7 @@ func TestInvokeAsync(t *testing.T) {
 			r.markResponseType()
 			body, _ := encode(r)
 			_, err = conn.Write(body)
+			conn.Close()
 			if err != nil {
 				t.Fatalf("failed to send response %s", err)
 			}
